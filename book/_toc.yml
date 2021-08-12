@@ -1,0 +1,6 @@
+format: jb-article
+root: chapters/intro
+sections:
+  - file: notebooks/class2.ipynb
+  # sections:
+  # - file: notebooks/class2.ipynb
