@@ -7,4 +7,5 @@ __pycache__
 **/.#*
 .ipynb*
 book/_build
+*.slides.html
 flycheck_setup.py
