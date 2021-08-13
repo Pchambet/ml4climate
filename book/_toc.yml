@@ -1,6 +1,10 @@
 format: jb-article
 root: chapters/intro
 sections:
-  - file: notebooks/class2.ipynb
+  - file: notebooks/2_bias_variance_regularization_validation.ipynb
+  - file: notebooks/4_unsupervised_learning.ipynb
+  - file: notebooks/6_ensemble_methods.ipynb
+  - file: notebooks/8_large_scale_machine_learning.ipynb
+  - file: notebooks/appendix_elements_of_probability_theory.ipynb
   # sections:
   # - file: notebooks/class2.ipynb
