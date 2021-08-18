@@ -7,5 +7,6 @@ sections:
   - file: notebooks/6_ensemble_methods.ipynb
   - file: notebooks/8_large_scale_machine_learning.ipynb
   - file: notebooks/appendix_elements_of_probability_theory.ipynb
+  - file: chapters/resources
   # sections:
   # - file: notebooks/class2.ipynb
