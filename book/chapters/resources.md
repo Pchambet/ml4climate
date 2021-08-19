@@ -11,3 +11,4 @@
 
 [![An Introduction to Earth and Environmental Data Science](https://earth-env-data-science.github.io/images/logo/eeds-logo.png)](https://earth-env-data-science.github.io/) [An Introduction to Earth and Environmental Data Science](https://earth-env-data-science.github.io/)
 
+[Time Series Analysis: Theory and Practice](http://jmlilly.net/course.html)
