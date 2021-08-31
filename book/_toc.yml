@@ -8,6 +8,5 @@ sections:
   - file: notebooks/8_large_scale_machine_learning.ipynb
   - file: notebooks/appendix_elements_of_probability_theory.ipynb
   - file: chapters/resources
-  - file: chapters/overfitting_vs_underfitting.md
   # sections:
   # - file: notebooks/class2.ipynb
