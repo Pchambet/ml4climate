@@ -36,6 +36,7 @@ kernelspec:
 - Define a supervised learning problem
 - Apply the methodology to a multiple linear regression
 - Understand when and why a model does or does not generalize well on unseen data
+- Use regularization to prevent overfitting
 </div>
 
 +++ {"slideshow": {"slide_type": "slide"}}
@@ -46,21 +47,24 @@ kernelspec:
 
 ### Example: Home Heating
 
-When its cold in my accomodation, I heat it.
+<img alt="Thermostat" src="images/erik-mclean-fSLI8RdCdyk-unsplash.jpg" width=500  style="float:right">
 
-$\rightarrow$ I suspect a relationship between the energy I consume to heat my accomodation and the outdoor temperature, although other factors may also play a role.
+When its cold in my accommodation, I heat it.
+
+$\rightarrow$ I suspect a relationship between the energy I consume to heat my accommodation and the outdoor temperature, although other factors may also play a role.
 
 +++ {"slideshow": {"slide_type": "fragment"}}
 
-How to predict how much energy I consume on average depending on the outdoor temperature ?
+How to *predict* how much energy I consume on average depending on the outdoor temperature ?
 
 +++ {"slideshow": {"slide_type": "subslide"}}
 
-Three different approaches:
+### Three different approaches
 
-- Process-based: use some approximation of the heat equation in my accomodation given heat sources (radiators) and sinks (outdoor).
-- Expert-based: a thermal engineer diagnoses my accomodation based on his knowledge and/or on conventions.
-- *Statistical*: use energy-consumption and outdoor-temperature data to estimate parameters of a model.
+| Process-based | Expert-based | *Statistical* |
+| --- | --- | --- |
+| Use some approximation of the heat equation in my accommodation given heat sources (radiators) and sinks (outdoor). | A thermal engineer diagnoses my accommodation based on his/her knowledge and/or on conventions. | Use energy-consumption and outdoor-temperature data to estimate parameters of a model. |
+| <img alt="Building Energy Model" src="images/Heat_losses_of_the_building-fr.svg" width="180"> | <img alt="DPE" src="images/Diagnostic_de_performance_énergétique.svg" width="150"> | <img alt="Statistical Model" src="images/linear_ols.svg" width="280"> |
 
 +++ {"slideshow": {"slide_type": "slide"}}
 
@@ -83,12 +87,16 @@ Construct the "best" prediction rule to predict $Y$ based on some *training data
 
 +++ {"slideshow": {"slide_type": "subslide"}}
 
-The $i$th *observation* of $X_j$ in the *sample* is given by the element $x_{ij}$ of $N\times p$ *data matrix* $\boldsymbol{X}$.
+The $i$th *observation* of $X_j$ in the *sample* is given by the element $x_{ij}$ of the $N\times p$ *input-data matrix* $\mathbf{X}$.
+
+The $i$th observation of $y$ is given by the element $y_i$ of the $N \times 1$ *output-data vector* $\mathbf{y}$.
+
++++ {"slideshow": {"slide_type": "subslide"}}
 
 | Regression | Classification |
 | ------------------------------------- | --------------------------------------- |
 | $Y$ is quantitative | $Y$ is qualitative |
-| <img src="images/katrin-hauf-XyGfxCVbjCA-unsplash.jpg" width="300"> | <img src="images/supervised.png" width="300"> |
+| <img src="images/artur-solarz-hihmzc-TToc-unsplash.jpg" width="350"> | <img src="images/supervised.png" width="300"> |
 
 ```{code-cell} ipython3
 ---
@@ -148,23 +156,13 @@ pn.Row(pn.interact(scatter_temp_dem, region_name=df_dem.columns,
        pn.Spacer(width=100), text)
 ```
 
-+++ {"slideshow": {"slide_type": "subslide"}}
-
-### Generalizing vs. Memorizing
-
-New data will differ from training data.
-
-Plus there is *noise* from unresolved factors.
-
-$\rightarrow$ we want to be able to *generalize*, not just *memorize*
-
 +++ {"slideshow": {"slide_type": "slide"}}
 
 ### Supervised Learning Problem Definition
 
 Given the output $Y$,
 
-- define inputs $X = (X_1, \ldots, X_p)$
+- define features $X = (X_1, \ldots, X_p)$ based on (transformed) raw inputs
 - define model by a function $\mathcal{M}: X \mapsto \mathcal{M}(X)$
 - define *loss function* $L(Y, \mathcal{M}(X))$
 - choose a training set $(\boldsymbol{x}_i, y_i), i = 1, \ldots, N$
@@ -256,6 +254,84 @@ The best prediction of the output for any input is the conditional expectation, 
 
 +++ {"slideshow": {"slide_type": "slide"}}
 
+## Ordinary Least Squares
+
++++ {"slideshow": {"slide_type": "subslide"}}
+
+### Strengths
+
+- Simple to use;
+- Easily interpretable in terms of variances and covariances;
+- Can outperform fancier nonlinear models for predition, especially in situations with:
+  - small training samples,
+  - low signal-to-noise ratio,
+  - sparse data.
+- Expandable to nonlinear transformations of the inputs.
+
++++ {"slideshow": {"slide_type": "subslide"}}
+
+### Linear Model
+
+\begin{equation}
+\mathcal{M}_{\boldsymbol{\beta}}(X) = \beta_0 + \sum_{j = 1}^p X_j \beta_j
+\end{equation}
+$X_j$ can come from :
+- quantitative inputs;
+- transformations of quantitative inputs, such as log, square-root or square;
+- basis expansions, such as $X_2 = X_1^2$, $X_3 = X_1^3$;
+- interactions between variables, for example, $X_3 = X_1 \cdot X_2$;
+- numeric or "dummy" coding of the levels of qualitative inputs. For example, $X_j, j = 1, \ldots, 5$, such that $X_j = I(G = j)$.
+
++++ {"slideshow": {"slide_type": "subslide"}}
+
+### Residual Sum of Squares
+
+The sample-mean estimate of the Expected Training Error with Squared Error Loss gives the *Residual Sum of Squares* (RSS) depending on the parameters:
+
+\begin{equation}
+\mathrm{RSS}(\beta)
+= \sum_{i = 1}^N \left(y_i - \mathcal{M}(x_i)\right)^2
+ = \sum_{i = 1}^N \left(y_i - \beta_0 - \sum_{j = 1}^p x_{ij} \beta_j\right)^2.
+\end{equation}
+
+<img alt="Linear fit" src="images/linear_fit_red.svg" width="360" style="float:left">
+<img alt="Linear fit" src="images/lin_reg_3D.svg" width="400" style="float:right">
+
++++ {"slideshow": {"slide_type": "subslide"}}
+
+### How to Minimize the RSS ?
+
+Denote by $\mathbf{X}$ the $N \times (p + 1)$ data matrix (with a 1 in the first column).
+Then,
+
+\begin{equation}
+\mathrm{RSS}(\beta) = \left(\mathbf{y} - \mathbf{X} \boldsymbol{\beta}\right)^T \left(\mathbf{y} - \mathbf{X} \boldsymbol{\beta}\right).
+\end{equation}
+
+> ***Question***
+> - Show that the following parameter estimate minimizes the RSS.
+> - Give a necessary and sufficient condition for this solution to be unique.
+> - When could this condition not be fulfilled?
+
+\begin{equation}
+    \hat{\boldsymbol{\beta}} = \left(\mathbf{X}^T \mathbf{X}\right)^{-1} \left(\mathbf{X}^T \mathbf{y}\right)
+\end{equation}
+
++++ {"slideshow": {"slide_type": "subslide"}}
+
+Then, the predictions from the training input data are given by
+
+\begin{equation}
+\hat{\mathbf{y}} = \mathbf{X} \boldsymbol{\beta} = \mathbf{X} \left(\mathbf{X}^T \mathbf{X}\right) \left(\mathbf{X}^T \mathbf{y}\right).
+\end{equation}
+
+The residual vector is given by $\mathbf{y} - \hat{\mathbf{y}}$.
+
+> ***Question (Optional)***
+> - Show that the residual is the orthogonal projection of $\mathbf{y}$ on the subspace of $\mathbb{R}^N$ spanned by the family of features.
+
++++ {"slideshow": {"slide_type": "slide"}}
+
 ## Bias-Variance Decomposition of the EPE
 
 +++ {"slideshow": {"slide_type": "slide"}}
@@ -266,11 +342,18 @@ The best prediction of the output for any input is the conditional expectation, 
 
 ## Law of Large Numbers ?
 
++++
+
+## Take Home Messages
+
+- 
+-
+
 +++ {"slideshow": {"slide_type": "slide"}}
 
 ## References
 
-- [Hastie, T., Tibshirani, R., Friedman, J., 2009. *The Elements of Statistical Learning*, 2nd ed. Springer, New York.](https://doi.org/10.1007/978-0-387-84858-7)
+- Chap. 2-3 in [Hastie, T., Tibshirani, R., Friedman, J., 2009. *The Elements of Statistical Learning*, 2nd ed. Springer, New York.](https://doi.org/10.1007/978-0-387-84858-7)
 
 +++ {"slideshow": {"slide_type": "slide"}}
 
