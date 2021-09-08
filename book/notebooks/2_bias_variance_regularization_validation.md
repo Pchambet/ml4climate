@@ -334,7 +334,24 @@ Then,
 
 +++ {"slideshow": {"slide_type": "subslide"}}
 
-Then, the predictions from the training input data are given by
+Let $\mathbf{x}$ and $\mathbf{y}$ be the data vectors of the one-dimensional random variables $X$ and $Y$.
+
+> ***Question***
+> - Take $\mathcal{M}(X) = X \beta_1$, what OLS fit of $\hat{\beta}_1$ ?
+> - Assume that $\bar{x} = 0$ and take $\mathcal{M}(X) = \beta_0 + X \beta_1$, what OLS fit of $\hat{\beta}_0$ and $\hat{\beta}_1$ ?
+
++++ {"slideshow": {"slide_type": "subslide"}}
+
+Suppose that the inputs $\mathbf{x}_1, \ldots, \mathbf{x}_p$ (the columns of the data matrix $\mathbf{X}$) are orthogonal; that is $\mathbf{x}_j^\top \mathbf{x}_k = 0$ for all $j \ne k$.
+
+> ***Question***
+> - Show that $\hat{\beta} = \mathbf{x}_j^\top \mathbf{y} / (\mathbf{x}_j^\top \mathbf{x}_j)$ for all $j$.
+> - How do the inputs influence each other's parameter estimates in the model?
+> - Design an algorithm based on Gram-Schmidt orthogonalization to compute $\hat{\boldsymbol{\beta}}$ without inverting $\mathbf{X}^\top \mathbf{X}$ for inputs which are not orthogonal (optional).
+
++++ {"slideshow": {"slide_type": "subslide"}}
+
+The predictions with parameters $\hat{\boldsymbol{\beta}}$ from the training input data are given by
 
 \begin{equation}
 \hat{\mathbf{y}} = \mathbf{X} \hat{\boldsymbol{\beta}} = \mathbf{X} \left(\mathbf{X}^\top \mathbf{X}\right) \left(\mathbf{X}^\top \mathbf{y}\right).
@@ -345,7 +362,7 @@ The residual vector is given by $\mathbf{y} - \hat{\mathbf{y}}$.
 > ***Question (optional)***
 > - Show that the residual is the orthogonal projection of $\mathbf{y}$ on the subspace of $\mathbb{R}^N$ spanned by the family of features.
 
-+++ {"slideshow": {"slide_type": "subslide"}}
++++ {"slideshow": {"slide_type": "slide"}}
 
 We now assume that $Y = \boldsymbol{X}^\top \boldsymbol{\beta} + \epsilon$, where the observations of $\epsilon$ are *uncorrelated* and with *mean zero* and *constant variance* $\sigma^2$.
 
@@ -397,6 +414,7 @@ z_j = \frac{\hat{\beta}_j}{\hat{\sigma} \sqrt{v_j}}.
 +++ {"slideshow": {"slide_type": "slide"}}
 
 ### Multiple Regression from Simple Univariate Regression
+
 
 +++ {"slideshow": {"slide_type": "slide"}}
 
