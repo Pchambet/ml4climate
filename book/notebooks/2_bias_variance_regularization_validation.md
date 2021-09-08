@@ -249,12 +249,12 @@ The best prediction of the output for any input is the conditional expectation, 
 
 +++ {"slideshow": {"slide_type": "subslide"}}
 
-> ***Question (Optional)***
+> ***Question (optional)***
 > - What is the statistic giving the solution minimizing the EPE if we use the absolute error loss $|Y - f(X)|$ instead of the squared error loss?
 
 +++ {"slideshow": {"slide_type": "slide"}}
 
-## Ordinary Least Squares
+## Ordinary Least Squares (OLS)
 
 +++ {"slideshow": {"slide_type": "subslide"}}
 
@@ -262,11 +262,12 @@ The best prediction of the output for any input is the conditional expectation, 
 
 - Simple to use;
 - Easily interpretable in terms of variances and covariances;
-- Can outperform fancier nonlinear models for predition, especially in situations with:
+- Can outperform fancier nonlinear models for prediction, especially in situations with:
   - small training samples,
   - low signal-to-noise ratio,
   - sparse data.
-- Expandable to nonlinear transformations of the inputs.
+- Expandable to nonlinear transformations of the inputs;
+- Can be used as a simple reference to learn about machine learning methodologies (supervised learning, in particular).
 
 +++ {"slideshow": {"slide_type": "subslide"}}
 
@@ -299,22 +300,36 @@ The sample-mean estimate of the Expected Training Error with Squared Error Loss 
 
 +++ {"slideshow": {"slide_type": "subslide"}}
 
+The *coefficient of determination* $R^2$ relates to the RSS as such,
+
+\begin{equation}
+R^2(\boldsymbol{\beta}) = 1 - \frac{\mathrm{RSS}(\boldsymbol{\beta})}{\mathrm{TSS}},
+\end{equation}
+
+where $\mathrm{TSS} = \sum_{i = 1}^N (y_i - \bar{y})^2$ is the *Total Sum of Squares* and $\bar{y} = \sum_{i = 1}^N y_i$ is the sample mean.
+
+> ***Question (optional)***
+> - Express $R^2$ in terms of explained variance.
+> - Show that $R^2$ is invariant under linear transformations the target.
+
++++ {"slideshow": {"slide_type": "slide"}}
+
 ### How to Minimize the RSS ?
 
 Denote by $\mathbf{X}$ the $N \times (p + 1)$ data matrix (with a 1 in the first column).
 Then,
 
 \begin{equation}
-\mathrm{RSS}(\beta) = \left(\mathbf{y} - \mathbf{X} \boldsymbol{\beta}\right)^T \left(\mathbf{y} - \mathbf{X} \boldsymbol{\beta}\right).
+\mathrm{RSS}(\beta) = \left(\mathbf{y} - \mathbf{X} \boldsymbol{\beta}\right)^\top \left(\mathbf{y} - \mathbf{X} \boldsymbol{\beta}\right).
 \end{equation}
 
 > ***Question***
 > - Show that the following parameter estimate minimizes the RSS.
-> - Give a necessary and sufficient condition for this solution to be unique.
+> - Show that this solution is unique if and only if $\mathbf{X}^\top\mathbf{X}$ is positive definite (optional).
 > - When could this condition not be fulfilled?
 
 \begin{equation}
-    \hat{\boldsymbol{\beta}} = \left(\mathbf{X}^T \mathbf{X}\right)^{-1} \left(\mathbf{X}^T \mathbf{y}\right)
+    \hat{\boldsymbol{\beta}} = \left(\mathbf{X}^\top \mathbf{X}\right)^{-1} \left(\mathbf{X}^\top \mathbf{y}\right)
 \end{equation}
 
 +++ {"slideshow": {"slide_type": "subslide"}}
@@ -322,13 +337,66 @@ Then,
 Then, the predictions from the training input data are given by
 
 \begin{equation}
-\hat{\mathbf{y}} = \mathbf{X} \boldsymbol{\beta} = \mathbf{X} \left(\mathbf{X}^T \mathbf{X}\right) \left(\mathbf{X}^T \mathbf{y}\right).
+\hat{\mathbf{y}} = \mathbf{X} \hat{\boldsymbol{\beta}} = \mathbf{X} \left(\mathbf{X}^\top \mathbf{X}\right) \left(\mathbf{X}^\top \mathbf{y}\right).
 \end{equation}
 
 The residual vector is given by $\mathbf{y} - \hat{\mathbf{y}}$.
 
-> ***Question (Optional)***
+> ***Question (optional)***
 > - Show that the residual is the orthogonal projection of $\mathbf{y}$ on the subspace of $\mathbb{R}^N$ spanned by the family of features.
+
++++ {"slideshow": {"slide_type": "subslide"}}
+
+We now assume that $Y = \boldsymbol{X}^\top \boldsymbol{\beta} + \epsilon$, where the observations of $\epsilon$ are *uncorrelated* and with *mean zero* and *constant variance* $\sigma^2$.
+
+> ***Question (optional)***
+> - Knowing that $\boldsymbol{X} = \boldsymbol{x}$, show that the observations of $y$ are uncorrelated, with mean $\boldsymbol{x}^\top \boldsymbol{\beta}$ and variance $\sigma^2$.
+> - Show that $\mathbb{E}(\hat{\boldsymbol{\beta}} | \mathbf{X}) = \boldsymbol{\beta}$ and that $\mathrm{Var}(\hat{\boldsymbol{\beta}} | \mathbf{X}) = \sigma^2 \mathbf{X}^\top \mathbf{X}$.
+> - Show that $\hat{\sigma}^2 = \sum_{i = 1}^N (y_i - \hat{y}_i)^2 / (N - p - 1)$ is an unbiased estimate of $\sigma^2$, i.e $\mathbb{E}(\hat{\sigma}^2) = \sigma^2$.
+
++++ {"slideshow": {"slide_type": "subslide"}}
+
+### Gauss-Markov Theorem
+
+<div class="alert alert-block alert-info">
+Least-squares estimates of the parameters have the smallest variance among all linear unbiased estimates. The OLS is BLUE (Best Linear Unbiased Estimator).
+</div>
+
+Let $\tilde{\boldsymbol{\beta}}$ be any estimate of the parameters.
+We mean that for any linear combination defined by the vector $\boldsymbol{a}$,
+
+\begin{equation}
+    \mathrm{Var}(\boldsymbol{a}^\top \hat{\boldsymbol{\beta}}) \le \mathrm{Var}(\boldsymbol{a}^\top \tilde{\boldsymbol{\beta}}).
+\end{equation}
+
+> ***Question (optional)***
+> - Prove this theorem.
+
++++ {"slideshow": {"slide_type": "slide"}}
+
+### Confidence Intervals
+
+We now assume that the error $\epsilon$ is a Gaussian random variable, i.e $\epsilon \sim N(0, \sigma^2)$ and would like to test the null hypothesis that $\beta_j = 0$.
+
+> ***Question (optional)***
+> - Show that $\hat{\boldsymbol{\beta}} \sim N(\boldsymbol{\beta}, (\mathbf{X}^\top \mathbf{X}) \sigma^2)$.
+> - Show that $(N - p - 1) \hat{\sigma}^2 \sim \sigma^2 \ \chi^2_{N - p - 1}$, a chi-squared distribution with $N - p - 1$ degrees of freedom. 
+> - Show that $\hat{\boldsymbol{\beta}}$ and $\hat{\sigma}^2$ are statistically independent.
+
++++ {"slideshow": {"slide_type": "subslide"}}
+
+With $v_j = [(\mathbf{X}^\top \mathbf{X})^{-1}]_{jj}$, we define the *standardized coefficient* or *Z-score*
+\begin{equation}
+z_j = \frac{\hat{\beta}_j}{\hat{\sigma} \sqrt{v_j}}.
+\end{equation}
+
+> ***Question (optional)***
+> - Show that $z_j$ is distributed as $t_{N - p - 1}$ (a Student's-$t$ distribution with $N - p - 1$ degrees of freedom).
+> - Show that the $1 - 2 \alpha$ confidence interval for $\beta_j$ is $(\hat{\beta}_j - z^{(1 - \alpha)}_{N - p - 1} \hat{\sigma} \sqrt{v_j}, \hat{\beta}_j + z^{(1 - \alpha)}_{N - p - 1} \hat{\sigma} \sqrt{v_j})$, where $z^{(1 - \alpha)}_{N - p - 1}$ is the $(1 - \alpha)$ percentile of $t_{N - p - 1}$.
+
++++ {"slideshow": {"slide_type": "slide"}}
+
+### Multiple Regression from Simple Univariate Regression
 
 +++ {"slideshow": {"slide_type": "slide"}}
 
@@ -353,7 +421,9 @@ The residual vector is given by $\mathbf{y} - \hat{\mathbf{y}}$.
 
 ## References
 
-- Chap. 2-3 in [Hastie, T., Tibshirani, R., Friedman, J., 2009. *The Elements of Statistical Learning*, 2nd ed. Springer, New York.](https://doi.org/10.1007/978-0-387-84858-7)
+- [James, G., Witten, D., Hastie, T., Tibshirani, R., n.d. *An Introduction to Statistical Learning*, 2st ed. Springer, New York, NY.](https://www.statlearning.com/)
+- Chap. 2, 3 and 7 in [Hastie, T., Tibshirani, R., Friedman, J., 2009. *The Elements of Statistical Learning*, 2nd ed. Springer, New York.](https://doi.org/10.1007/978-0-387-84858-7)
+- Chap. 5 and 7 in [Wilks, D.S., 2019. *Statistical Methods in the Atmospheric Sciences*, 4th ed. Elsevier, Amsterdam.](https://doi.org/10.1016/C2017-0-03921-6)
 
 +++ {"slideshow": {"slide_type": "slide"}}
 

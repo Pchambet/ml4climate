@@ -4,6 +4,8 @@
 
 [Statistics and Data Science](http://theoryandpractice.org/stats-ds-book/)
 
+[![Data School](https://www.dataschool.io/content/images/2014/12/DS_FINAL.png)](https://www.dataschool.io/15-hours-of-expert-machine-learning-videos/) [In-depth introduction to machine learning in 15 hours of expert videos](https://www.dataschool.io/15-hours-of-expert-machine-learning-videos/)
+
 [![Scikit-Learn Course](https://inria.github.io/scikit-learn-mooc/_static/scikit-learn-logo.png)](https://inria.github.io/scikit-learn-mooc/) [Scikit-Learn Course](https://inria.github.io/scikit-learn-mooc/)
 
 [![Explaining neural networks in raw Python: lectures in Jupiter](https://bronwojtek.github.io/neuralnets-in-raw-python/_static/koh.png)](https://bronwojtek.github.io/neuralnets-in-raw-python/docs/) [Explaining neural networks in raw Python: lectures in Jupiter](https://bronwojtek.github.io/neuralnets-in-raw-python/docs/)
