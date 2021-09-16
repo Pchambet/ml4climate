@@ -87,22 +87,44 @@ Construct the "best" prediction rule to predict $Y$ based on some *training data
 
 +++ {"slideshow": {"slide_type": "subslide"}}
 
+#### Supervised-Learning Flow: Fit
+
+<img alt="Pipeline Fit" src="images/api_diagram-pipeline.fit.svg" height="200">
+
++++ {"slideshow": {"slide_type": "subslide"}}
+
+#### Supervised-Learning Flow: Predict
+
+<img alt="Pipeline Fit" src="images/api_diagram-pipeline.predict.svg" height="200">
+
++++ {"slideshow": {"slide_type": "subslide"}}
+
 The $i$th *observation* of $X_j$ in the *sample* is given by the element $x_{ij}$ of the $N\times p$ *input-data matrix* $\mathbf{X}$.
 
 The $i$th observation of $y$ is given by the element $y_i$ of the $N \times 1$ *output-data vector* $\mathbf{y}$.
 
 +++ {"slideshow": {"slide_type": "subslide"}}
 
+#### Regression / Classification
+
 | Regression | Classification |
 | ------------------------------------- | --------------------------------------- |
 | $Y$ is quantitative | $Y$ is qualitative |
 | <img src="images/artur-solarz-hihmzc-TToc-unsplash.jpg" width="350"> | <img src="images/supervised.png" width="300"> |
 
++++ {"slideshow": {"slide_type": "subslide"}}
+
+#### Example: Electricity consumption dependence on temperature
+
+- *Raw input*: temperature averaged over an administrative region of metropolitan France
+- *Target*: regional electricity consumption
+
 ```{code-cell} ipython3
 ---
 slideshow:
-  slide_type: skip
+  slide_type: subslide
 ---
+# Import modules
 from pathlib import Path
 import numpy as np
 import pandas as pd
@@ -110,17 +132,26 @@ import hvplot.pandas
 import panel as pn
 pn.extension()
 
+# Set data directory
 data_dir = Path('data')
+
+# Set keyword arguments for pd.read_csv
 kwargs_read_csv = dict(header=0, index_col=0, parse_dates=True)
 
+# Set first and last years
 FIRST_YEAR = 2014
 LAST_YEAR = 2019
+
+# Define file path
 filename = 'surface_temperature_merra2_{}-{}.csv'.format(
     FIRST_YEAR, LAST_YEAR)
 filepath = Path(data_dir, filename)
+
+# Read hourly temperature data averaged over each region
 df_temp = pd.read_csv(filepath, **kwargs_read_csv).resample('D').mean()
 label_temp = 'Temperature (°C)'
 
+# Read hourly demand data summed over each region
 filename = 'reseaux_energies_demand_demand.csv'
 filepath = Path(data_dir, filename)
 df_dem = pd.read_csv(filepath, **kwargs_read_csv).resample('D').sum()
@@ -130,8 +161,9 @@ label_dem = 'Demand (MWh)'
 ```{code-cell} ipython3
 ---
 slideshow:
-  slide_type: skip
+  slide_type: subslide
 ---
+# Scatter plot of demand versus temperature
 def scatter_temp_dem(region_name, year):
     df = pd.concat([df_temp[region_name], df_dem[region_name]],
                    axis='columns', ignore_index=True).loc[str(year)]
@@ -151,6 +183,7 @@ text = pn.pane.Markdown("""
 slideshow:
   slide_type: subslide
 ---
+# Show
 pn.Row(pn.interact(scatter_temp_dem, region_name=df_dem.columns,
                    year=range(FIRST_YEAR, LAST_YEAR)),
        pn.Spacer(width=100), text)
@@ -176,7 +209,9 @@ Squared error loss: $L(Y, \mathcal{M}(X)) = \left(Y - \mathcal{M}(X)\right)^2$
 +++ {"slideshow": {"slide_type": "subslide"}}
 
 <div class="alert alert-block alert-warning">
-We assume that all random variables and random vectors have finite variance and have densities (they are absolutely continuous with respect to the Lebesgue measure).
+    <b>Assumption</b>
+    
+All random variables and random vectors have finite variance and have densities (they are absolutely continuous with respect to the Lebesgue measure).
 </div>
 
 +++ {"slideshow": {"slide_type": "slide"}}
@@ -243,11 +278,15 @@ Since the expectation is the value that minimizes the expectation of the squared
 
 +++ {"slideshow": {"slide_type": "subslide"}}
 
+In other words:
+
 <div class="alert alert-block alert-info">
+    <b>Theorem</b>
+    
 The best prediction of the output for any input is the conditional expectation, when best is measured by average squared error.
 </div>
 
-+++ {"slideshow": {"slide_type": "subslide"}}
++++ {"slideshow": {"slide_type": "fragment"}}
 
 > ***Question (optional)***
 > - What is the statistic giving the solution minimizing the EPE if we use the absolute error loss $|Y - f(X)|$ instead of the squared error loss?
@@ -274,11 +313,14 @@ The best prediction of the output for any input is the conditional expectation, 
 ### Linear Model
 
 \begin{equation}
-\mathcal{M}_{\boldsymbol{\beta}}(X) = \beta_0 + \sum_{j = 1}^p X_j \beta_j
+\mathcal{M}_{\boldsymbol{\beta}}(X) = \underbrace{\beta_0}_{\mathrm{intercept}} + \sum_{j = 1}^p X_j \beta_j
 \end{equation}
+
++++ {"slideshow": {"slide_type": "subslide"}}
+
 $X_j$ can come from :
 - quantitative inputs;
-- transformations of quantitative inputs, such as log, square-root or square;
+- transformations of quantitative inputs, such as log or square;
 - basis expansions, such as $X_2 = X_1^2$, $X_3 = X_1^3$;
 - interactions between variables, for example, $X_3 = X_1 \cdot X_2$;
 - numeric or "dummy" coding of the levels of qualitative inputs. For example, $X_j, j = 1, \ldots, 5$, such that $X_j = I(G = j)$.
@@ -316,17 +358,21 @@ where $\mathrm{TSS} = \sum_{i = 1}^N (y_i - \bar{y})^2$ is the *Total Sum of Squ
 
 ### How to Minimize the RSS ?
 
-Denote by $\mathbf{X}$ the $N \times (p + 1)$ data matrix (with a 1 in the first column).
-Then,
+Denote by $\mathbf{X}$ the $N \times (p + 1)$ input-data matrix.
 
+The 1st column of $\mathbf{X}$ is associated with the intercept and is given by the $N$-dimensional vector $\mathbf{1}$ with all elements equal to 1.
+
+Then,
 \begin{equation}
 \mathrm{RSS}(\beta) = \left(\mathbf{y} - \mathbf{X} \boldsymbol{\beta}\right)^\top \left(\mathbf{y} - \mathbf{X} \boldsymbol{\beta}\right).
 \end{equation}
 
++++ {"slideshow": {"slide_type": "subslide"}}
+
 > ***Question***
 > - Show that the following parameter estimate minimizes the RSS.
 > - Show that this solution is unique if and only if $\mathbf{X}^\top\mathbf{X}$ is positive definite (optional).
-> - When could this condition not be fulfilled?
+> - When could this condition not be fulfilled (optional)?
 
 \begin{equation}
     \hat{\boldsymbol{\beta}} = \left(\mathbf{X}^\top \mathbf{X}\right)^{-1} \left(\mathbf{X}^\top \mathbf{y}\right)
@@ -334,11 +380,16 @@ Then,
 
 +++ {"slideshow": {"slide_type": "subslide"}}
 
-Let $\mathbf{x}$ and $\mathbf{y}$ be the data vectors of the one-dimensional random variables $X$ and $Y$.
+The predictions with parameters $\hat{\boldsymbol{\beta}}$ from the input data are given by
 
-> ***Question***
-> - Take $\mathcal{M}(X) = X \beta_1$, what OLS fit of $\hat{\beta}_1$ ?
-> - Assume that $\bar{x} = 0$ and take $\mathcal{M}(X) = \beta_0 + X \beta_1$, what OLS fit of $\hat{\beta}_0$ and $\hat{\beta}_1$ ?
+\begin{equation}
+\hat{\mathbf{y}} = \mathbf{X} \hat{\boldsymbol{\beta}} = \mathbf{X} \left(\mathbf{X}^\top \mathbf{X}\right)^{-1} \left(\mathbf{X}^\top \mathbf{y}\right).
+\end{equation}
+
+The residual vector is given by $\hat{\mathbf{z}} = \mathbf{y} - \hat{\mathbf{y}}$.
+
+> ***Question (optional)***
+> - Show that $\hat{\mathbf{y}}$ is the orthogonal projection of $\mathbf{y}$ on the subspace of $\mathbb{R}^N$ spanned by the columns of $\mathbf{X}$ (i.e the column space of $\mathbf{X}$) and that $\hat{\mathbf{z}}$ is orthogonal to this space.
 
 +++ {"slideshow": {"slide_type": "subslide"}}
 
@@ -347,35 +398,51 @@ Suppose that the inputs $\mathbf{x}_1, \ldots, \mathbf{x}_p$ (the columns of the
 > ***Question***
 > - Show that $\hat{\beta} = \mathbf{x}_j^\top \mathbf{y} / (\mathbf{x}_j^\top \mathbf{x}_j)$ for all $j$.
 > - How do the inputs influence each other's parameter estimates in the model?
-> - Design an algorithm based on Gram-Schmidt orthogonalization to compute $\hat{\boldsymbol{\beta}}$ without inverting $\mathbf{X}^\top \mathbf{X}$ for inputs which are not orthogonal (optional).
+
++++ {"slideshow": {"slide_type": "slide"}}
+
+### Graphical Interpretation and Gram-Schmidt Algorithm
+
+Let $\mathbf{x}$, $\mathbf{y}$ be the data vectors of the 1-dimensional random variables $X$, $Y$.
+
+> ***Question***
+> - Without intercept, what is the OLS fit of $\hat{\beta}_1$?
+> - With intercept, but assuming that $\bar{x} = 0$, what is the OLS fit of $\hat{\beta}_0$ and $\hat{\beta}_1$?
+> - What if $\mathbf{x}$ and $\mathbf{1}$ are not orthogonal?
+> - How does the colinearity of $\mathbf{x}$ and $\mathbf{1}$ affect the sensitivity of $\hat{\beta}_1$ to sampling ?
 
 +++ {"slideshow": {"slide_type": "subslide"}}
 
-The predictions with parameters $\hat{\boldsymbol{\beta}}$ from the training input data are given by
+By *regressing* $\mathbf{b}$ on $\mathbf{a}$ we mean regressing with input $\mathbf{a}$ and target $\mathbf{b}$.
 
-\begin{equation}
-\hat{\mathbf{y}} = \mathbf{X} \hat{\boldsymbol{\beta}} = \mathbf{X} \left(\mathbf{X}^\top \mathbf{X}\right) \left(\mathbf{X}^\top \mathbf{y}\right).
-\end{equation}
-
-The residual vector is given by $\mathbf{y} - \hat{\mathbf{y}}$.
-
-> ***Question (optional)***
-> - Show that the residual is the orthogonal projection of $\mathbf{y}$ on the subspace of $\mathbb{R}^N$ spanned by the family of features.
+> ***Question***
+> - Regress $\mathbf{x}$ on $\mathbf{1}$ and compute the resulting residual $\hat{\mathbf{z}}_1$.
+> - Regress $\mathbf{y}$ on $\hat{\mathbf{z}}_1$. The result should be familiar.
+> - Interpret the above procedure graphically.
+> - Generalize this procedure to the case of $p$ inputs and express the $j$th estimate in terms of some $\hat{\mathbf{z}}_j$ as $\hat{\beta}_j = \hat{\mathbf{z}_j}^\top \mathbf{y} / (\hat{\mathbf{z}_j}^\top \hat{\mathbf{z}_j})$ (optional).
 
 +++ {"slideshow": {"slide_type": "slide"}}
+
+### Gauss-Markov Theorem
 
 We now assume that $Y = \boldsymbol{X}^\top \boldsymbol{\beta} + \epsilon$, where the observations of $\epsilon$ are *uncorrelated* and with *mean zero* and *constant variance* $\sigma^2$.
 
 > ***Question (optional)***
 > - Knowing that $\boldsymbol{X} = \boldsymbol{x}$, show that the observations of $y$ are uncorrelated, with mean $\boldsymbol{x}^\top \boldsymbol{\beta}$ and variance $\sigma^2$.
-> - Show that $\mathbb{E}(\hat{\boldsymbol{\beta}} | \mathbf{X}) = \boldsymbol{\beta}$ and that $\mathrm{Var}(\hat{\boldsymbol{\beta}} | \mathbf{X}) = \sigma^2 \mathbf{X}^\top \mathbf{X}$.
+> - Show that $\mathbb{E}(\hat{\boldsymbol{\beta}} | \mathbf{X}) = \boldsymbol{\beta}$ and $\mathrm{Var}(\hat{\boldsymbol{\beta}} | \mathbf{X}) = \sigma^2 (\mathbf{X}^\top \mathbf{X})^{-1}$.
 > - Show that $\hat{\sigma}^2 = \sum_{i = 1}^N (y_i - \hat{y}_i)^2 / (N - p - 1)$ is an unbiased estimate of $\sigma^2$, i.e $\mathbb{E}(\hat{\sigma}^2) = \sigma^2$.
 
 +++ {"slideshow": {"slide_type": "subslide"}}
 
-### Gauss-Markov Theorem
+> ***Question (optional)***
+> - Express the variances of the parameter estimates in terms of the orthogonal basis of the column space of $\mathbf{X}$ constructed above.
+> - How does the precision of $\hat{\beta}_j$ depend on the input data?
+
++++ {"slideshow": {"slide_type": "subslide"}}
 
 <div class="alert alert-block alert-info">
+    <strong>Gauss-Markov Theorem</strong>
+    
 Least-squares estimates of the parameters have the smallest variance among all linear unbiased estimates. The OLS is BLUE (Best Linear Unbiased Estimator).
 </div>
 
@@ -413,8 +480,130 @@ z_j = \frac{\hat{\beta}_j}{\hat{\sigma} \sqrt{v_j}}.
 
 +++ {"slideshow": {"slide_type": "slide"}}
 
-### Multiple Regression from Simple Univariate Regression
+## Overfitting and Underfitting
 
+Which fit do you prefer?
+
+<img alt="Linear fit" src="images/linear_ols.svg" width="450" style="float:left">
+<img alt="Linear fit" src="images/linear_splines.svg" width="450" style="float:right">
+
++++ {"slideshow": {"slide_type": "subslide"}}
+
+Which model performs better on new data?
+
+<img alt="Linear fit" src="images/linear_ols_test.svg" width="450" style="float:left">
+<img alt="Linear fit" src="images/linear_splines_test.svg" width="450" style="float:right">
+
++++ {"slideshow": {"slide_type": "subslide"}}
+
+A harder example:
+
+<img alt="Linear fit" src="images/ols_simple_test.svg" width="450" style="float:left">
+<img alt="Linear fit" src="images/splines_cubic_test.svg" width="450" style="float:right">
+
++++ {"slideshow": {"slide_type": "subslide"}}
+
+### Varying model complexity
+
+<img alt="Linear fit" src="images/polynomial_overfit_truth.svg" width="450" style="float:left">
+
+- Data generated by a random process
+  - Sample a value of $X$
+  - Transform with 9th-degree polynomial
+  - Add noise to get samples of $Y$
+
++++ {"slideshow": {"slide_type": "subslide"}}
+
+### Varying model complexity
+
+<img alt="Linear fit" src="images/polynomial_overfit_0.svg" width="450" style="float:left">
+
+- Data generated by a random process
+- In fact, this process is unknown
+- We can only access observations
+
++++ {"slideshow": {"slide_type": "subslide"}}
+
+### Varying model complexity
+
+<img alt="Linear fit" src="images/polynomial_overfit_1.svg" width="450" style="float:left">
+
+- Data generated by a random process
+- In fact, this process is unknown
+- We can only access observations
+- Fit polynomials of various degrees
+
++++ {"slideshow": {"slide_type": "subslide"}}
+
+### Varying model complexity
+
+<img alt="Linear fit" src="images/polynomial_overfit_2.svg" width="450" style="float:left">
+
+- Data generated by a random process
+- In fact, this process is unknown
+- We can only access observations
+- Fit polynomials of various degrees
+
++++ {"slideshow": {"slide_type": "subslide"}}
+
+### Varying model complexity
+
+<img alt="Linear fit" src="images/polynomial_overfit_5.svg" width="450" style="float:left">
+
+- Data generated by a random process
+- In fact, this process is unknown
+- We can only access observations
+- Fit polynomials of various degrees
+
++++ {"slideshow": {"slide_type": "subslide"}}
+
+### Varying model complexity
+
+<img alt="Linear fit" src="images/polynomial_overfit_9.svg" width="450" style="float:left">
+
+- Data generated by a random process
+- In fact, this process is unknown
+- We can only access observations
+- Fit polynomials of various degrees
+
++++ {"slideshow": {"slide_type": "subslide"}}
+
+### Varying model complexity
+
+<img alt="Linear fit" src="images/polynomial_overfit.svg" width="450" style="float:left">
+
+- Data generated by a random process
+- In fact, this process is unknown
+- We can only access observations
+- Fit polynomials of various degrees
+
++++ {"slideshow": {"slide_type": "subslide"}}
+
+### Overfit: model too complex
+
+<img alt="Linear fit" src="images/polynomial_overfit_simple_legend.svg" width="450" style="float:left;margin-right:40px">
+
+Model too complex for the data:
+- Its best fit would approximate well the process
+- However, its flexibility captures noise
+
++++ {"slideshow": {"slide_type": "fragment"}}
+
+**Not enough data - Too much noise**
+
++++ {"slideshow": {"slide_type": "subslide"}}
+
+### Underfit: model too simple
+
+<img alt="Linear fit" src="images/polynomial_underfit_simple.svg" width="450" style="float:left;margin-right:40px">
+
+Model too simple for the data:
+- Best fit would not approximate well the process
+- Yet it captures little noise
+
++++ {"slideshow": {"slide_type": "fragment"}}
+
+**Plenty of data - Low noise**
 
 +++ {"slideshow": {"slide_type": "slide"}}
 
@@ -432,7 +621,12 @@ z_j = \frac{\hat{\beta}_j}{\hat{\sigma} \sqrt{v_j}}.
 
 ## Take Home Messages
 
-- 
+- Models too complex for the data overfit:
+  - they explain too well the data that they have seen
+  - they do not generalize
+- Models too simple for the data underfit:
+  - they capture no noise
+  - they are limited by their expressivity
 -
 
 +++ {"slideshow": {"slide_type": "slide"}}
@@ -450,6 +644,7 @@ z_j = \frac{\hat{\beta}_j}{\hat{\sigma} \sqrt{v_j}}.
 
 [//]: # "This notebook is part of [E4C Interdisciplinary Center - Education](https://gitlab.in2p3.fr/energy4climate/public/education)."
 Contributors include Bruno Deremble and Alexis Tantet.
+Several slides and images are taken from the very good [Scikit-learn course](https://inria.github.io/scikit-learn-mooc/).
 
 <br>
 
