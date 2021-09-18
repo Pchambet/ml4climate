@@ -31,7 +31,7 @@
 % NB    - Number of hourly averages in the baseline
 % scale - Calibration scale code
 %
-Yr, Mn, Dy,    CO2, NB, scale
+% Yr, Mn, Dy,    CO2, NB, scale
 1958, 01, 01,    NaN,  0, 12.0
 1958, 01, 02,    NaN,  0, 12.0
 1958, 01, 03,    NaN,  0, 12.0
