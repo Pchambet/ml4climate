@@ -36,6 +36,7 @@ kernelspec:
 - Define a supervised learning problem
 - Apply the methodology to a multiple linear regression
 - Understand when and why a model does or does not generalize well on unseen data
+- Understand overfitting/underfitting trade-off
 - Use regularization to prevent overfitting
 </div>
 
@@ -87,15 +88,23 @@ Construct the "best" prediction rule to predict $Y$ based on some *training data
 
 +++ {"slideshow": {"slide_type": "subslide"}}
 
-#### Supervised-Learning Flow: Fit
+#### Supervised-Learning Flow: Fit and Predict
 
-<img alt="Pipeline Fit" src="images/api_diagram-pipeline.fit.svg" height="200">
+<img alt="Pipeline Fit" src="images/api_diagram-predictor.fit.svg" width="500">
+
++++ {"slideshow": {"slide_type": "fragment"}}
+
+<img alt="Pipeline Fit" src="images/api_diagram-predictor.predict.svg" width="600">
 
 +++ {"slideshow": {"slide_type": "subslide"}}
 
-#### Supervised-Learning Flow: Predict
+#### Supervised-Learning Flow: Transform-Fit and Transform-Predict
 
-<img alt="Pipeline Fit" src="images/api_diagram-pipeline.predict.svg" height="200">
+<img alt="Pipeline Fit" src="images/api_diagram-pipeline.fit.svg" width="750">
+
++++ {"slideshow": {"slide_type": "fragment"}}
+
+<img alt="Pipeline Fit" src="images/api_diagram-pipeline.predict.svg" width="860">
 
 +++ {"slideshow": {"slide_type": "subslide"}}
 
@@ -170,6 +179,7 @@ def scatter_temp_dem(region_name, year):
     df.columns = [label_temp, label_dem]
     return df.hvplot.scatter(x=label_temp, y=label_dem, width=500,
                              xlim=[-5, 30])
+
 
 text = pn.pane.Markdown("""
 ## Generalizing vs. Memorizing
@@ -605,28 +615,247 @@ Model too simple for the data:
 
 **Plenty of data - Low noise**
 
++++ {"slideshow": {"slide_type": "subslide"}}
+
+### Partial Summary
+
+- Models too complex for the data **overfit**:
+  - they explain too well the data that they have seen
+  - they do not generalize
+- Models too simple for the data **underfit**:
+  - they capture no noise
+  - they are limited by their expressivity
+
 +++ {"slideshow": {"slide_type": "slide"}}
+
+## Comparing train and test errors
+
++++ {"slideshow": {"slide_type": "subslide"}}
+
+### Train vs Test (Prediction) Error
+
+<img src="images/linear_splines_test.svg" style="float:left;margin-right:20px" width="600">
+
+- Errors on the *train data*:
+
+\begin{equation}
+\overline{\mathrm{err}} = \frac{1}{N} \sum_{i = 1}^N L(y_i, \hat{\mathcal{M}}(\mathbf{x}_i))
+\end{equation}
+
+- Errors on the *test data* (generalization):
+
+\begin{equation}
+\mathrm{Err}_\mathcal{T} = \mathbb{E}\left[L(Y, \hat{\mathcal{M}}(\boldsymbol{X})) | \mathcal{T}\right]
+\end{equation}
+
+where $\hat{\mathcal{M}}$ is estimated based on a fixed training set $\mathcal{T}$.
+
++++ {"slideshow": {"slide_type": "subslide"}}
+
+### Train vs test error: increasing complexity
+
+<img src="images/polynomial_overfit_test_1.svg" width="450" style="float:left">
+<img src="images/polynomial_validation_curve_1.svg" width="450" style="float:right">
+
++++ {"slideshow": {"slide_type": "subslide"}}
+
+### Train vs test error: increasing complexity
+
+<img src="images/polynomial_overfit_test_2.svg" width="450" style="float:left">
+<img src="images/polynomial_validation_curve_2.svg" width="450" style="float:right">
+
++++ {"slideshow": {"slide_type": "subslide"}}
+
+### Train vs test error: increasing complexity
+
+<img src="images/polynomial_overfit_test_5.svg" width="450" style="float:left">
+<img src="images/polynomial_validation_curve_5.svg" width="450" style="float:right">
+
++++ {"slideshow": {"slide_type": "subslide"}}
+
+### Train vs test error: increasing complexity
+
+<img src="images/polynomial_overfit_test_9.svg" width="450" style="float:left">
+<img src="images/polynomial_validation_curve_15.svg" width="450" style="float:right">
+
++++ {"slideshow": {"slide_type": "subslide"}}
+
+### Train vs Test Error: Validation Curve
+
+<img src="images/polynomial_validation_curve_15_annotated.png" width="800">
+
++++ {"slideshow": {"slide_type": "slide"}}
+
+### Train vs Test Error: Varying Sample Size
+
+<img src="images/polynomial_overfit_ntrain_42.svg" width="400" style="float:left">
+<img src="images/polynomial_learning_curve_42.svg" width="500" style="float:right">
+<div style="clear:both;"></div>
+
+<center><b>Overfit</b></center>
+
++++ {"slideshow": {"slide_type": "subslide"}}
+
+### Train vs Test Error: Varying Sample Size
+
+<img src="images/polynomial_overfit_ntrain_145.svg" width="400" style="float:left">
+<img src="images/polynomial_learning_curve_145.svg" width="500" style="float:right">
+<div style="clear:both;"></div>
+
+<center><b>Overfit less</b></center>
+
++++ {"slideshow": {"slide_type": "subslide"}}
+
+### Train vs Test Error: Varying Sample Size
+
+<img src="images/polynomial_overfit_ntrain_1179.svg" width="400" style="float:left">
+<img src="images/polynomial_learning_curve_1179.svg" width="500" style="float:right">
+<div style="clear:both;"></div>
+
+<center><b>Sweet spot?</b></center>
+
++++ {"slideshow": {"slide_type": "subslide"}}
+
+### Train vs Test Error: Learning Curve
+
+<img src="images/polynomial_overfit_ntrain_6766.svg" width="400" style="float:left">
+<img src="images/polynomial_learning_curve_6766.svg" width="500" style="float:right">
+<div style="clear:both;"></div>
+
+<center><b>Diminishing returns &#8594; Try more complex models?</b></center>
+
++++ {"slideshow": {"slide_type": "subslide"}}
+
+### Irreducible Error
+
+<img src="images/polynomial_overfit_ntrain_6766.svg" width="400" style="float:left;margin-right:20px">
+
+Error of best model trained on unlimited data
+
+Here, the data-generating process is a degree-9 polynomial
+
+A higher-degree polynomial will not do better
+
+**Predictions limited by noise**
+
++++ {"slideshow": {"slide_type": "subslide"}}
+
+### Model Families
+
+Crucial to match:
+- statistical model
+- data-generating process
+
+So far: polynomial for both
+
+Some family names: *linear models, decision trees, random forests, kernel machines, multi-layer perceptrons*
+
++++ {"slideshow": {"slide_type": "subslide"}}
+
+### Different Model Families
+
+<img src="images/different_models_complex_4.svg" width="450" style="float:left;margin-right:50px">
+
+- Different inductive (learning) bias
+- Different notion of complexity
+
++++ {"slideshow": {"slide_type": "subslide"}}
+
+### Different Model Families
+
+<img src="images/different_models_complex_4.svg" width="450" style="float:left">
+<img src="images/different_models_complex_16.svg" width="450" style="float:right">
+<div style="clear:both"></div>
+<div style="float:left"><b>Simple variant</b></div>
+<div style="float:right"><b>Complex variant</b></div>
+
++++ {"slideshow": {"slide_type": "subslide"}}
+
+### Partial Summary
+
+Models **overfit**:
+- number of samples in the training set is too small for model's complexity
+- testing error is much bigger than training error
+
+Models **underfit**:
+- models fail to capture the shape of the training set
+- even the training error is large
+
+Different model families = different complexity
+
++++ {"slideshow": {"slide_type": "subslide"}}
 
 ## Bias-Variance Decomposition of the EPE
 
++++ {"slideshow": {"slide_type": "subslide"}}
+
+## Cross-Validation
+
 +++ {"slideshow": {"slide_type": "slide"}}
 
-## Stationarity Assumption
+## Law of Large Numbers?
 
-+++ {"slideshow": {"slide_type": "slide"}}
+Estimates attempt to minimize a function of the training error $\overline{\mathrm{err}}$.
 
-## Law of Large Numbers ?
+For estimates to converge with the sample size, so should $\overline{\mathrm{err}}$.
 
-+++
++++ {"slideshow": {"slide_type": "fragment"}}
+
+$\rightarrow$ We need some **Law of Large Numbers** to be applicable.
+
+Basic assumptions: **independent** and **identically distributed**.
+
++++ {"slideshow": {"slide_type": "subslide"}}
+
+### What could go wrong?
+
+In the natural and engineering sciences many problems depend on **time**.
+
+So far, we have assumed that the joint distribution $f_{\boldsymbol{X}, Y}$ is **independent of time**.
+
+In particular, we have assumed that the joint process is **statistically stationary**.
+
++++ {"slideshow": {"slide_type": "subslide"}}
+
+Variations in time can rarely be considered purely random:
+
+$\rightarrow$ some **dependence** persist between realizations
+
++++ {"slideshow": {"slide_type": "fragment"}}
+
+Yet, we are fine if we can show that:
+- there is a **stationary distribution**
+- realizations sufficiently distant in time **no longer correlate**
+
++++ {"slideshow": {"slide_type": "fragment"}}
+
+However, distributions may change with **cycles** and **trends**.
+
++++ {"slideshow": {"slide_type": "subslide"}}
+
+### Violation of Statistical Stationarity
+
+<div style="float:left;margin-right:20px">
+<img src="images/640px-20200324_Global_average_temperature_-_NASA-GISS_HadCrut_NOAA_Japan_BerkeleyE.svg.png" width="600">
+
+[By RCraig09 - Own work, CC BY-SA 4.0](https://commons.wikimedia.org/w/index.php?curid=88535596)
+</div>
+
+Surface air temperature variability can be decomposed into:
+
+$-$ (pseudo-)periodic **cycles** (diurnal, annual, Milankovitch)
+
+$-$ a **continuous spectrum** of frequencies due to chaotic dynamics
+
+$-$ an increasing **trend** due to global warming
+
+$-$ other non-equilibrium variations (effect of volcanoes, solar activity, ...)
+
++++ {"slideshow": {"slide_type": "subslide"}}
 
 ## Take Home Messages
 
-- Models too complex for the data overfit:
-  - they explain too well the data that they have seen
-  - they do not generalize
-- Models too simple for the data underfit:
-  - they capture no noise
-  - they are limited by their expressivity
+
 -
 
 +++ {"slideshow": {"slide_type": "slide"}}
