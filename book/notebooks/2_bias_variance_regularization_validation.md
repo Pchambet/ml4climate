@@ -60,7 +60,7 @@ How to *predict* how much energy I consume on average depending on the outdoor t
 
 +++ {"slideshow": {"slide_type": "subslide"}}
 
-### Three different approaches
+#### Three Different Approaches to Home-Heating Modeling
 
 | Process-based | Expert-based | *Statistical* |
 | --- | --- | --- |
@@ -123,10 +123,12 @@ The $i$th observation of $y$ is given by the element $y_i$ of the $N \times 1$ *
 
 +++ {"slideshow": {"slide_type": "subslide"}}
 
-#### Example: Electricity consumption dependence on temperature
+#### Example: Electricity Consumption Dependence on Temperature
 
 - *Raw input*: temperature averaged over an administrative region of metropolitan France
 - *Target*: regional electricity consumption
+
+Let's first get familiar with the raw input data.
 
 ```{code-cell} ipython3
 ---
@@ -137,6 +139,7 @@ slideshow:
 from pathlib import Path
 import numpy as np
 import pandas as pd
+import holoviews as hv
 import hvplot.pandas
 import panel as pn
 pn.extension()
@@ -158,8 +161,66 @@ filepath = Path(data_dir, filename)
 
 # Read hourly temperature data averaged over each region
 df_temp = pd.read_csv(filepath, **kwargs_read_csv).resample('D').mean()
+temp_lim = [-5, 30]
 label_temp = 'Temperature (°C)'
+```
 
+```{code-cell} ipython3
+---
+slideshow:
+  slide_type: subslide
+---
+WIDTH = 260
+# Scatter plot of demand versus temperature
+def plot_temp(region_name, year):
+    df = df_temp[[region_name]].loc[str(year)]
+    df.columns = [label_temp]
+    nt = df.shape[0]
+    std = float(df.std(0))
+    mean = pd.Series(df[label_temp].mean(), index=df.index)
+    df_std = pd.DataFrame(
+        {'low': mean - std, 'high': mean + std}, index=df.index)
+    cdf = pd.DataFrame(index=df.sort_values(by=label_temp).values[:, 0],
+                       data=(np.arange(nt)[:, None] + 1) / nt)
+    cdf.index.name = label_temp
+    cdf.columns = ['Probability']
+    pts = df.hvplot(ylim=temp_lim, title='', width=WIDTH).opts(
+        title='Time series, Mean, ± 1 STD') * hv.HLine(
+        df[label_temp].mean()) * df_std.hvplot.area(
+        y='low', y2='high', alpha=0.2)
+    pcdf = cdf.hvplot(xlim=temp_lim, ylim=[0, 1], title='', width=WIDTH).opts(
+        title='Cumulative Distrib. Func.') * hv.VLine(
+        df[label_temp].mean())
+    pkde = df.hvplot.kde(xlim=temp_lim,
+                         width=WIDTH) * hv.VLine(
+        df[label_temp].mean()).opts(title='Probability Density Func.')
+    
+    return pn.Row(pts, pcdf, pkde)
+```
+
+```{code-cell} ipython3
+---
+slideshow:
+  slide_type: subslide
+---
+# Show
+pn.interact(plot_temp, region_name=df_temp.columns,
+            year=range(FIRST_YEAR, LAST_YEAR))
+```
+
++++ {"slideshow": {"slide_type": "subslide"}}
+
+> ***Question***
+> - Describe how the mean and the standard deviation of the time series above depend on the region and on the year.
+> - How do these dependencies show on the cumulative distribution and probability density functions?
+
+Now let's compare the target data with the input data.
+
+```{code-cell} ipython3
+---
+slideshow:
+  slide_type: subslide
+---
 # Read hourly demand data summed over each region
 filename = 'reseaux_energies_demand_demand.csv'
 filepath = Path(data_dir, filename)
@@ -182,10 +243,10 @@ def scatter_temp_dem(region_name, year):
 
 
 text = pn.pane.Markdown("""
-## Generalizing vs. Memorizing
-### New data will differ from training data.         
-### Plus there is *noise* from unresolved factors.      
-### -> we want to be able to *generalize*, not just *memorize*""")
+### Generalizing vs. Memorizing
+#### New data will differ from training data.         
+#### Plus there is *noise* from unresolved factors.      
+#### -> we want to be able to *generalize*, not just *memorize*""")
 ```
 
 ```{code-cell} ipython3
@@ -196,7 +257,7 @@ slideshow:
 # Show
 pn.Row(pn.interact(scatter_temp_dem, region_name=df_dem.columns,
                    year=range(FIRST_YEAR, LAST_YEAR)),
-       pn.Spacer(width=100), text)
+       pn.Spacer(width=20), text)
 ```
 
 +++ {"slideshow": {"slide_type": "slide"}}
@@ -494,28 +555,28 @@ z_j = \frac{\hat{\beta}_j}{\hat{\sigma} \sqrt{v_j}}.
 
 Which fit do you prefer?
 
-<img alt="Linear fit" src="images/linear_ols.svg" width="450" style="float:left">
-<img alt="Linear fit" src="images/linear_splines.svg" width="450" style="float:right">
+<img alt="Linear fit" src="images/linear_ols.svg" width="400" style="float:left">
+<img alt="Linear fit" src="images/linear_splines.svg" width="400" style="float:right">
 
 +++ {"slideshow": {"slide_type": "subslide"}}
 
 Which model performs better on new data?
 
-<img alt="Linear fit" src="images/linear_ols_test.svg" width="450" style="float:left">
-<img alt="Linear fit" src="images/linear_splines_test.svg" width="450" style="float:right">
+<img alt="Linear fit" src="images/linear_ols_test.svg" width="400" style="float:left">
+<img alt="Linear fit" src="images/linear_splines_test.svg" width="400" style="float:right">
 
 +++ {"slideshow": {"slide_type": "subslide"}}
 
 A harder example:
 
-<img alt="Linear fit" src="images/ols_simple_test.svg" width="450" style="float:left">
-<img alt="Linear fit" src="images/splines_cubic_test.svg" width="450" style="float:right">
+<img alt="Linear fit" src="images/ols_simple_test.svg" width="400" style="float:left">
+<img alt="Linear fit" src="images/splines_cubic_test.svg" width="400" style="float:right">
 
 +++ {"slideshow": {"slide_type": "subslide"}}
 
 ### Varying model complexity
 
-<img alt="Linear fit" src="images/polynomial_overfit_truth.svg" width="450" style="float:left">
+<img alt="Linear fit" src="images/polynomial_overfit_truth.svg" width="400" style="float:left">
 
 - Data generated by a random process
   - Sample a value of $X$
@@ -526,7 +587,7 @@ A harder example:
 
 ### Varying model complexity
 
-<img alt="Linear fit" src="images/polynomial_overfit_0.svg" width="450" style="float:left">
+<img alt="Linear fit" src="images/polynomial_overfit_0.svg" width="400" style="float:left">
 
 - Data generated by a random process
 - In fact, this process is unknown
@@ -536,18 +597,7 @@ A harder example:
 
 ### Varying model complexity
 
-<img alt="Linear fit" src="images/polynomial_overfit_1.svg" width="450" style="float:left">
-
-- Data generated by a random process
-- In fact, this process is unknown
-- We can only access observations
-- Fit polynomials of various degrees
-
-+++ {"slideshow": {"slide_type": "subslide"}}
-
-### Varying model complexity
-
-<img alt="Linear fit" src="images/polynomial_overfit_2.svg" width="450" style="float:left">
+<img alt="Linear fit" src="images/polynomial_overfit_1.svg" width="400" style="float:left">
 
 - Data generated by a random process
 - In fact, this process is unknown
@@ -558,7 +608,7 @@ A harder example:
 
 ### Varying model complexity
 
-<img alt="Linear fit" src="images/polynomial_overfit_5.svg" width="450" style="float:left">
+<img alt="Linear fit" src="images/polynomial_overfit_2.svg" width="400" style="float:left">
 
 - Data generated by a random process
 - In fact, this process is unknown
@@ -569,7 +619,7 @@ A harder example:
 
 ### Varying model complexity
 
-<img alt="Linear fit" src="images/polynomial_overfit_9.svg" width="450" style="float:left">
+<img alt="Linear fit" src="images/polynomial_overfit_5.svg" width="400" style="float:left">
 
 - Data generated by a random process
 - In fact, this process is unknown
@@ -580,7 +630,18 @@ A harder example:
 
 ### Varying model complexity
 
-<img alt="Linear fit" src="images/polynomial_overfit.svg" width="450" style="float:left">
+<img alt="Linear fit" src="images/polynomial_overfit_9.svg" width="400" style="float:left">
+
+- Data generated by a random process
+- In fact, this process is unknown
+- We can only access observations
+- Fit polynomials of various degrees
+
++++ {"slideshow": {"slide_type": "subslide"}}
+
+### Varying model complexity
+
+<img alt="Linear fit" src="images/polynomial_overfit.svg" width="400" style="float:left">
 
 - Data generated by a random process
 - In fact, this process is unknown
@@ -591,7 +652,7 @@ A harder example:
 
 ### Overfit: model too complex
 
-<img alt="Linear fit" src="images/polynomial_overfit_simple_legend.svg" width="450" style="float:left;margin-right:40px">
+<img alt="Linear fit" src="images/polynomial_overfit_simple_legend.svg" width="400" style="float:left;margin-right:40px">
 
 Model too complex for the data:
 - Its best fit would approximate well the process
@@ -605,7 +666,7 @@ Model too complex for the data:
 
 ### Underfit: model too simple
 
-<img alt="Linear fit" src="images/polynomial_underfit_simple.svg" width="450" style="float:left;margin-right:40px">
+<img alt="Linear fit" src="images/polynomial_underfit_simple.svg" width="400" style="float:left;margin-right:40px">
 
 Model too simple for the data:
 - Best fit would not approximate well the process
@@ -634,7 +695,7 @@ Model too simple for the data:
 
 ### Train vs Test (Prediction) Error
 
-<img src="images/linear_splines_test.svg" style="float:left;margin-right:20px" width="600">
+<img src="images/linear_splines_test.svg" style="float:left;margin-right:20px" width="400">
 
 - Errors on the *train data*:
 
@@ -654,29 +715,29 @@ where $\hat{\mathcal{M}}$ is estimated based on a fixed training set $\mathcal{T
 
 ### Train vs test error: increasing complexity
 
-<img src="images/polynomial_overfit_test_1.svg" width="450" style="float:left">
-<img src="images/polynomial_validation_curve_1.svg" width="450" style="float:right">
+<img src="images/polynomial_overfit_test_1.svg" width="400" style="float:left">
+<img src="images/polynomial_validation_curve_1.svg" width="400" style="float:right">
 
 +++ {"slideshow": {"slide_type": "subslide"}}
 
 ### Train vs test error: increasing complexity
 
-<img src="images/polynomial_overfit_test_2.svg" width="450" style="float:left">
-<img src="images/polynomial_validation_curve_2.svg" width="450" style="float:right">
+<img src="images/polynomial_overfit_test_2.svg" width="400" style="float:left">
+<img src="images/polynomial_validation_curve_2.svg" width="400" style="float:right">
 
 +++ {"slideshow": {"slide_type": "subslide"}}
 
 ### Train vs test error: increasing complexity
 
-<img src="images/polynomial_overfit_test_5.svg" width="450" style="float:left">
-<img src="images/polynomial_validation_curve_5.svg" width="450" style="float:right">
+<img src="images/polynomial_overfit_test_5.svg" width="400" style="float:left">
+<img src="images/polynomial_validation_curve_5.svg" width="400" style="float:right">
 
 +++ {"slideshow": {"slide_type": "subslide"}}
 
 ### Train vs test error: increasing complexity
 
-<img src="images/polynomial_overfit_test_9.svg" width="450" style="float:left">
-<img src="images/polynomial_validation_curve_15.svg" width="450" style="float:right">
+<img src="images/polynomial_overfit_test_9.svg" width="400" style="float:left">
+<img src="images/polynomial_validation_curve_15.svg" width="400" style="float:right">
 
 +++ {"slideshow": {"slide_type": "subslide"}}
 
@@ -689,7 +750,8 @@ where $\hat{\mathcal{M}}$ is estimated based on a fixed training set $\mathcal{T
 ### Train vs Test Error: Varying Sample Size
 
 <img src="images/polynomial_overfit_ntrain_42.svg" width="400" style="float:left">
-<img src="images/polynomial_learning_curve_42.svg" width="500" style="float:right">
+<img src="images/polynomial_learning_curve_42.svg" width="400" style="float:right">
+
 <div style="clear:both;"></div>
 
 <center><b>Overfit</b></center>
@@ -699,7 +761,8 @@ where $\hat{\mathcal{M}}$ is estimated based on a fixed training set $\mathcal{T
 ### Train vs Test Error: Varying Sample Size
 
 <img src="images/polynomial_overfit_ntrain_145.svg" width="400" style="float:left">
-<img src="images/polynomial_learning_curve_145.svg" width="500" style="float:right">
+<img src="images/polynomial_learning_curve_145.svg" width="400" style="float:right">
+
 <div style="clear:both;"></div>
 
 <center><b>Overfit less</b></center>
@@ -709,7 +772,8 @@ where $\hat{\mathcal{M}}$ is estimated based on a fixed training set $\mathcal{T
 ### Train vs Test Error: Varying Sample Size
 
 <img src="images/polynomial_overfit_ntrain_1179.svg" width="400" style="float:left">
-<img src="images/polynomial_learning_curve_1179.svg" width="500" style="float:right">
+<img src="images/polynomial_learning_curve_1179.svg" width="400" style="float:right">
+
 <div style="clear:both;"></div>
 
 <center><b>Sweet spot?</b></center>
@@ -719,7 +783,8 @@ where $\hat{\mathcal{M}}$ is estimated based on a fixed training set $\mathcal{T
 ### Train vs Test Error: Learning Curve
 
 <img src="images/polynomial_overfit_ntrain_6766.svg" width="400" style="float:left">
-<img src="images/polynomial_learning_curve_6766.svg" width="500" style="float:right">
+<img src="images/polynomial_learning_curve_6766.svg" width="400" style="float:right">
+
 <div style="clear:both;"></div>
 
 <center><b>Diminishing returns &#8594; Try more complex models?</b></center>
@@ -728,7 +793,7 @@ where $\hat{\mathcal{M}}$ is estimated based on a fixed training set $\mathcal{T
 
 ### Irreducible Error
 
-<img src="images/polynomial_overfit_ntrain_6766.svg" width="400" style="float:left;margin-right:20px">
+<img src="images/polynomial_overfit_ntrain_6766.svg" width="380" style="float:left;margin-right:20px">
 
 Error of best model trained on unlimited data
 
@@ -754,7 +819,7 @@ Some family names: *linear models, decision trees, random forests, kernel machin
 
 ### Different Model Families
 
-<img src="images/different_models_complex_4.svg" width="450" style="float:left;margin-right:50px">
+<img src="images/different_models_complex_4.svg" width="380" style="float:left;margin-right:20px">
 
 - Different inductive (learning) bias
 - Different notion of complexity
@@ -763,9 +828,11 @@ Some family names: *linear models, decision trees, random forests, kernel machin
 
 ### Different Model Families
 
-<img src="images/different_models_complex_4.svg" width="450" style="float:left">
-<img src="images/different_models_complex_16.svg" width="450" style="float:right">
+<img src="images/different_models_complex_4.svg" width="400" style="float:left">
+<img src="images/different_models_complex_16.svg" width="400" style="float:right">
+
 <div style="clear:both"></div>
+
 <div style="float:left"><b>Simple variant</b></div>
 <div style="float:right"><b>Complex variant</b></div>
 
@@ -783,9 +850,13 @@ Models **underfit**:
 
 Different model families = different complexity
 
-+++ {"slideshow": {"slide_type": "subslide"}}
++++ {"slideshow": {"slide_type": "slide"}}
 
 ## Bias-Variance Decomposition of the EPE
+
++++ {"slideshow": {"slide_type": "subslide"}}
+
+We assume that $Y = \mathcal{M}(\boldsymbol{X}) + \epsilon$ where $\mathbf{E}(\epsilon) = 0$ and $\mathrm{Var}$
 
 +++ {"slideshow": {"slide_type": "subslide"}}
 
@@ -836,7 +907,8 @@ However, distributions may change with **cycles** and **trends**.
 ### Violation of Statistical Stationarity
 
 <div style="float:left;margin-right:20px">
-<img src="images/640px-20200324_Global_average_temperature_-_NASA-GISS_HadCrut_NOAA_Japan_BerkeleyE.svg.png" width="600">
+    
+<img src="images/640px-20200324_Global_average_temperature_-_NASA-GISS_HadCrut_NOAA_Japan_BerkeleyE.svg.png" width="400">
 
 [By RCraig09 - Own work, CC BY-SA 4.0](https://commons.wikimedia.org/w/index.php?curid=88535596)
 </div>
