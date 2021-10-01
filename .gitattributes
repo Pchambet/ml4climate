@@ -1,1 +1,5 @@
 book/notebooks/data filter=lfs diff=lfs merge=lfs -text
+book/notebooks/data/reseaux_energies_capacityfactor_pv.csv filter=lfs diff=lfs merge=lfs -text
+book/notebooks/data/reseaux_energies_capacityfactor_pv_Île-de-France.csv filter=lfs diff=lfs merge=lfs -text
+book/notebooks/data/reseaux_energies_capacityfactor_wind-onshore.csv filter=lfs diff=lfs merge=lfs -text
+book/notebooks/data/reseaux_energies_capacityfactor_wind-onshore_Île-de-France.csv filter=lfs diff=lfs merge=lfs -text
