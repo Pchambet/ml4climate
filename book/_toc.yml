@@ -11,8 +11,9 @@ sections:
   # - file: notebooks/4_unsupervised_learning.ipynb
   # - file: notebooks/6_ensemble_methods.ipynb
   # - file: notebooks/8_large_scale_machine_learning.ipynb
+  - file: notebooks/projects.ipynb
+  - file: chapters/resources
   - file: notebooks/appendix_elements_of_probability_theory.ipynb
   - file: notebooks/appendix_supplementary_matrial.ipynb
-  - file: chapters/resources
   # sections:
   # - file: notebooks/class2.ipynb
