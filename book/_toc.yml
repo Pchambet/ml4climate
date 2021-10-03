@@ -2,8 +2,12 @@ format: jb-article
 root: chapters/frontmatter
 sections:
   - file: notebooks/1_introduction.ipynb
-  - file: notebooks/2_supervised_learning_methodology.ipynb
-  - file: notebooks/2_tutorial_supervised_learning_methodology.ipynb
+  - file: notebooks/2_supervised_learning_problem_ols.ipynb
+  - file: notebooks/2_tutorial_supervised_learning_problem_ols.ipynb
+  - file: notebooks/3_overfitting_underfitting_bias_variance.ipynb
+  - file: notebooks/3_tutorial_overfitting_underfitting_bias_variance.ipynb
+  - file: notebooks/4_regularization_selection_evaluation.ipynb
+  - file: notebooks/4_tutorial_regularization_selection_evaluation.ipynb
   # - file: notebooks/4_unsupervised_learning.ipynb
   # - file: notebooks/6_ensemble_methods.ipynb
   # - file: notebooks/8_large_scale_machine_learning.ipynb
