@@ -8,9 +8,10 @@ sections:
   - file: notebooks/3_tutorial_overfitting_underfitting_bias_variance.ipynb
   - file: notebooks/4_regularization_selection_evaluation.ipynb
   - file: notebooks/4_tutorial_regularization_selection_evaluation.ipynb
-  # - file: notebooks/4_unsupervised_learning.ipynb
-  # - file: notebooks/6_ensemble_methods.ipynb
-  # - file: notebooks/8_large_scale_machine_learning.ipynb
+  - file: notebooks/5_classification_generative.ipynb
+  - file: notebooks/5_tutorial_classification_generative.ipynb
+  - file: notebooks/6_classification_discriminative.ipynb
+  - file: notebooks/6_tutorial_classification_discriminative.ipynb
   - file: notebooks/projects.ipynb
   - file: chapters/resources
   - file: notebooks/appendix_elements_of_probability_theory.ipynb
