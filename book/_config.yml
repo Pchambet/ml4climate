@@ -10,14 +10,13 @@ author                      : "Bruno Deremble and Alexis Tantet"  # The author o
 copyright                   : " Attribution-ShareAlike 4.0 International"  # Copyright year to be placed in the footer
 logo: images/logos/logo_e4c_final.png
 execute:
-  execute_notebooks: auto
+  execute_notebooks: force
   stderr_output: show
 only_build_toc_files: true
 
-# sphinx:
-#   config:
-#     bibtex_bibfiles:
-#       - 'references.bib'
+# Add a bibtex file so that we can create citations
+# bibtex_bibfiles:
+#   - 'references.bib'
 
 # Information about where the book exists on the web
 repository:

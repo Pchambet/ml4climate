@@ -2,11 +2,11 @@ image: python:3.8
 
 pages:
   script:
-    - pip install 'sphinxcontrib-bibtex>=2.1.4' 'jupyter-book>=0.11.1' 'Sphinx>=3.4.0' 'sphinx_book_theme>=0.0.41'
+    - pip install -r requirements.txt
+    - pip install jupyter-book
     - jupyter-book build -v book
-    - mv book/_build/html/ public/
   artifacts:
     paths:
-      - public
+      - book/_build/html
   only:
     - master
