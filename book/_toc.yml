@@ -2,6 +2,7 @@ format: jb-article
 root: chapters/frontmatter
 sections:
   - file: notebooks/1_introduction.ipynb
+  - file: notebooks/1_tutorial_introduction.ipynb
   - file: notebooks/2_supervised_learning_problem_ols.ipynb
   - file: notebooks/2_tutorial_supervised_learning_problem_ols.ipynb
   - file: notebooks/3_overfitting_underfitting_bias_variance.ipynb
