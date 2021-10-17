@@ -13,6 +13,8 @@ sections:
   - file: notebooks/5_tutorial_classification_generative.ipynb
   - file: notebooks/6_classification_discriminative.ipynb
   - file: notebooks/6_tutorial_classification_discriminative.ipynb
+  - file: notebooks/7_unsupervised_learning_pca.ipynb
+  - file: notebooks/7_tutorial_unsupervised_learning_pca.ipynb
   - file: notebooks/projects.ipynb
   - file: chapters/resources
   - file: notebooks/appendix_elements_of_probability_theory.ipynb
