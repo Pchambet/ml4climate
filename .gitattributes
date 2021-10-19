@@ -1,6 +1,3 @@
 book/notebooks/data filter=lfs diff=lfs merge=lfs -text
-book/notebooks/data/reseaux_energies_capacityfactor_pv.csv filter=lfs diff=lfs merge=lfs -text
 book/notebooks/data/reseaux_energies_capacityfactor_pv_Île-de-France.csv filter=lfs diff=lfs merge=lfs -text
-book/notebooks/data/reseaux_energies_capacityfactor_wind-onshore.csv filter=lfs diff=lfs merge=lfs -text
 book/notebooks/data/reseaux_energies_capacityfactor_wind-onshore_Île-de-France.csv filter=lfs diff=lfs merge=lfs -text
-book/notebooks/data/merra2_analyze_height_500_month_19800101-20190101.nc filter=lfs diff=lfs merge=lfs -text
