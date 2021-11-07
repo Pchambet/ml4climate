@@ -16,5 +16,5 @@ dependencies:
   - python>=3.8
   - rise
   - scipy
-  - scikit-learn
+  - scikit-learn>=1.0
   - xarray

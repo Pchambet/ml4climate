@@ -6,5 +6,5 @@ numpy
 pandas
 panel >=0.10.3
 scipy
-scikit-learn
+scikit-learn >=1.0
 xarray
