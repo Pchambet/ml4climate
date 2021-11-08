@@ -3,7 +3,7 @@ hvplot
 matplotlib
 netcdf4
 numpy
-pandas
+pandas >=1.0.5
 panel >=0.10.3
 scipy
 scikit-learn >=1.0
