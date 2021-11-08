@@ -1,6 +1,6 @@
 bokeh >=2.2.3
 hvplot
-matplotlib
+matplotlib >=3.2.2
 netcdf4
 numpy
 pandas >=1.0.5
