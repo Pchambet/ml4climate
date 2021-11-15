@@ -17,6 +17,8 @@ sections:
   - file: notebooks/7_tutorial_unsupervised_learning_pca.ipynb
   - file: notebooks/8_ensemble_methods.ipynb
   - file: notebooks/8_tutorial_ensemble_methods.ipynb
+  - file: notebooks/9_neural_networks.ipynb
+  - file: notebooks/9_tutorial_neural_networks.ipynb
   - file: notebooks/projects.ipynb
   - file: chapters/resources
   - file: notebooks/appendix_elements_of_probability_theory.ipynb
