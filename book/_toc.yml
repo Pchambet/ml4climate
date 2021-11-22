@@ -23,6 +23,7 @@ sections:
   - file: notebooks/projects.ipynb
   - file: chapters/resources
   - file: notebooks/appendix_elements_of_probability_theory.ipynb
+  - file: notebooks/appendix_random_variables.ipynb
   - file: notebooks/appendix_supplementary_matrial.ipynb
   # sections:
   # - file: notebooks/class2.ipynb
