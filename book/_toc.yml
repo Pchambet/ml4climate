@@ -17,7 +17,8 @@ sections:
   - file: notebooks/08_unsupervised_learning_pca.ipynb
   - file: notebooks/08_tutorial_unsupervised_learning_pca.ipynb
   - file: notebooks/09_ensemble_methods.ipynb
-  - file: notebooks/09_tutorial_ensemble_methods.ipynb
+  - file: notebooks/09_tutorial_ensemble_methods_windcf_prediction.ipynb
+  - file: notebooks/09_tutorial_ensemble_methods_demand_prediction.ipynb
   - file: notebooks/10_neural_networks.ipynb
   - file: notebooks/10_tutorial_neural_networks.ipynb
   - file: notebooks/11_intro_deep_learning.ipynb
