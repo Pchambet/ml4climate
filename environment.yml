@@ -7,6 +7,7 @@ channels:
 
 dependencies:
   - bokeh>=2.2.3
+  - holoviews>=1.14.9
   - hvplot
   - matplotlib
   - netcdf4==1.5.6
