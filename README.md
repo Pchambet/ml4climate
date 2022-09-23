@@ -17,8 +17,7 @@ Examples of such big data sets are:
 Analyzing such data set with machine learning will help us predict or
 optimize our energy consumption.
 - The IPCC provides forecast of the average temperature for the next 100 years.
-This forecast is based on about 30 different predictions made by complex models.
-Machine learning provides a way to track reliable patterns in this complex data set.
+This forecast is based on about 30 different predictions made by complex models. Machine learning provides a way to track reliable patterns in this complex data set.
 
 The objective of this course is to provide an introduction to statistical analysis and machine learning in order to help the students apply relevant methods to analyze specific data sets.
 Different families of unsupervised and supervised methods will be covered, while also providing a general approach to validate and test results.
