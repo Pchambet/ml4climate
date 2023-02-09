@@ -1,0 +1,15 @@
+#!/bin/bash
+# This script is the ENTRYPOINT into the image.
+# Accordingly, it receives as arguments the command to launch, e.g. 'jupyter-lab ...'
+# Before executing the requested command, we update the git repo of each course
+# so that we can make last-minute changes without rebuilding the image
+
+# Fast-forward to new commits
+HOSTNAME=gitlab.in2p3.fr
+
+cd $HOME
+echo "git config sslCAInfo ; git pull --ff-only"
+git config --global http."https://$HOSTNAME/".sslCAInfo $HOSTNAME.pem
+git pull --ff-only
+
+exec "$@"

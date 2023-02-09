@@ -1,21 +1,20 @@
 name: machine_learning_for_climate_and_energy
 
 channels:
-  - pyviz
   - conda-forge
   - defaults
 
 dependencies:
-  - bokeh>=2.2.3
-  - holoviews>=1.14.9
-  - hvplot
+  - bokeh=2.4.3=pyhd8ed1ab_3
+  - holoviews=1.15.4=pyhd8ed1ab_0
+  - hvplot=0.8.2=pyhd8ed1ab_0
   - matplotlib
-  - netcdf4==1.5.6
-  - numpy
-  - pandas>=1.2.4
-  - panel>=0.10.3
-  - python>=3.8
+  - netcdf4=1.6.2=nompi_py39hfaa66c4_100
+  - numpy=1.24.1=py39h7360e5f_0
+  - pandas=1.5.3=py39h2ad29b5_0
+  - panel=0.14.3=pyhd8ed1ab_0
+  - python=3.9.16=h2782a2a_0_cpython
   - rise
-  - scipy
+  - scipy=1.10.0=py39h7360e5f_0
   - scikit-learn>=1.0
-  - xarray
+  - xarray=2023.1.0=pyhd8ed1ab_0

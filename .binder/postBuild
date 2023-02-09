@@ -1,0 +1,6 @@
+HOSTNAME=gitlab.in2p3.fr
+
+set -ex
+# git config --global http.sslverify false 
+hostname=$HOSTNAME; openssl s_client -connect $hostname:443 -servername $hostname -showcerts </dev/null 2>/dev/null | sed -n -e '/BEGIN\ CERTIFICATE/,/END\ CERTIFICATE/ p' > $hostname.pem 
+git config --global http."https://$HOSTNAME/".sslCAInfo $HOSTNAME.pem
