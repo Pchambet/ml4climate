@@ -9,3 +9,4 @@ __pycache__
 book/_build
 *.slides.html
 flycheck_setup.py
+*.pem
