@@ -1,0 +1,30 @@
+format: jb-article
+root: chapters/frontmatter
+sections:
+  - file: notebooks/01_introduction.ipynb
+  - file: notebooks/01_tutorial_introduction.ipynb
+  - file: notebooks/02_supervised_learning_problem.ipynb
+  - file: notebooks/02_tutorial_supervised_learning_problem_ols.ipynb
+  - file: notebooks/03_ordinary_least_squares.ipynb
+  - file: notebooks/04_overfitting_underfitting_bias_variance.ipynb
+  - file: notebooks/04_tutorial_overfitting_underfitting_bias_variance.ipynb
+  - file: notebooks/05_regularization_selection_evaluation.ipynb
+  - file: notebooks/05_tutorial_regularization_selection_evaluation.ipynb
+  - file: notebooks/06_classification_generative.ipynb
+  - file: notebooks/06_tutorial_classification_generative.ipynb
+  - file: notebooks/07_classification_discriminative.ipynb
+  - file: notebooks/07_tutorial_classification_discriminative.ipynb
+  - file: notebooks/08_unsupervised_learning_pca.ipynb
+  - file: notebooks/08_tutorial_unsupervised_learning_pca.ipynb
+  - file: notebooks/09_ensemble_methods.ipynb
+  - file: notebooks/09_tutorial_ensemble_methods_windcf_prediction.ipynb
+  - file: notebooks/09_tutorial_ensemble_methods_demand_prediction.ipynb
+  - file: notebooks/10_neural_networks.ipynb
+  - file: notebooks/10_tutorial_neural_networks.ipynb
+  - file: notebooks/11_intro_deep_learning.ipynb
+  - file: notebooks/projects.ipynb
+  - file: chapters/resources
+  - file: notebooks/appendix_matrix_calculus.ipynb
+  - file: notebooks/appendix_random_variables.ipynb
+  - file: notebooks/appendix_elements_of_probability_theory.ipynb
+  - file: notebooks/appendix_supplementary_matrial.ipynb

@@ -1,0 +1,32 @@
+[build-system]
+requires = ["flit_core >= 3.12.0, <4"]
+build-backend = "flit_core.buildapi"
+
+[project]
+name = "ml4climate"
+version = "25.0.1"
+dependencies = [ 'matplotlib',
+                 'netcdf4 >=1.5.6', 
+                 'numpy',          
+                 'pandas >=1.2.4',
+                 'scipy', 
+                 'scikit-learn >=1.0', 
+                 'xarray']
+authors = [
+  { name="Bruno Deremble", email="author@example.com" },
+  { name="Alexis Tantet", email="author@example.com" },
+  { name="Victor Pellet", email="author@example.com" },
+]
+description = "A collection of jupyter notebook to learn machine learning"
+readme = "README.md"
+requires-python = ">=3.9"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Operating System :: OS Independent",
+]
+license = "MIT"
+license-files = ["LICENSE.txt"]
+
+[project.urls]
+Homepage = "https://github.com/mec557/ml4climate"
+Issues = "https://github.com/mec557/ml4climate/issues"

@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="350" height="500">
+  <title>DPE au format SVG</title>
+  <desc>
+    Consommation énergétique en kW.h/m²/an
+  </desc>
+  
+  <text font-family="Arial" x="10" y="30"    fill="rgb(0,0,0)" font-size="24" font-weight="bold">
+    Consommation énergétique
+  </text>
+  <text font-family="Arial" x="10" y="60"    fill="rgb(0,0,0)" font-size="24" font-weight="bold">
+    en kWh/m²/an
+  </text>
+  <polygon fill="rgb(000,128,000)" stroke="black" stroke-width="1" points="10,070 10,120 100,120 125.355339,095 100,070"  />
+  <polygon fill="rgb(000,255,000)" stroke="black" stroke-width="1" points="10,130 10,180 120,180 145.355339,155 120,130"  />
+  <polygon fill="rgb(128,255,000)" stroke="black" stroke-width="1" points="10,190 10,240 140,240 165.355339,215 140,190"  />
+  <polygon fill="rgb(255,255,000)" stroke="black" stroke-width="1" points="10,250 10,300 160,300 185.355339,275 160,250"  />
+  <polygon fill="rgb(255,128,000)" stroke="black" stroke-width="1" points="10,310 10,360 180,360 205.355339,335 180,310"  />
+  <polygon fill="rgb(255,128,064)" stroke="black" stroke-width="1" points="10,370 10,420 200,420 225.355339,395 200,370"  />
+  <polygon fill="rgb(255,000,000)" stroke="black" stroke-width="1" points="10,430 10,480 220,480 245.355339,455 220,430"  />
+ 
+  <text font-family="Arial" x="080" y="108" fill="rgb(0,0,0)" font-size="36" font-weight="normal"> A </text>
+  <text font-family="Arial" x="100" y="168" fill="rgb(0,0,0)" font-size="36" font-weight="normal"> B </text>
+  <text font-family="Arial" x="120" y="228" fill="rgb(0,0,0)" font-size="36" font-weight="normal"> C </text>
+  <text font-family="Arial" x="140" y="288" fill="rgb(0,0,0)" font-size="36" font-weight="normal"> D </text>
+  <text font-family="Arial" x="160" y="348" fill="rgb(0,0,0)" font-size="36" font-weight="normal"> E </text>
+  <text font-family="Arial" x="180" y="408" fill="rgb(0,0,0)" font-size="36" font-weight="normal"> F </text>
+  <text font-family="Arial" x="200" y="468" fill="rgb(0,0,0)" font-size="36" font-weight="normal"> G </text>
+  
+  <text font-family="Arial" x="020" y="103" fill="rgb(0,0,0)" font-size="20" font-weight="normal">     ≤ 50 </text>
+  <text font-family="Arial" x="020" y="163" fill="rgb(0,0,0)" font-size="20" font-weight="normal">  51 à  90 </text>
+  <text font-family="Arial" x="020" y="223" fill="rgb(0,0,0)" font-size="20" font-weight="normal">  91 à 150 </text>
+  <text font-family="Arial" x="020" y="283" fill="rgb(0,0,0)" font-size="20" font-weight="normal"> 151 à 230 </text>
+  <text font-family="Arial" x="020" y="343" fill="rgb(0,0,0)" font-size="20" font-weight="normal"> 231 à 330 </text>
+  <text font-family="Arial" x="020" y="403" fill="rgb(0,0,0)" font-size="20" font-weight="normal"> 331 à 450 </text>
+  <text font-family="Arial" x="020" y="463" fill="rgb(0,0,0)" font-size="20" font-weight="normal">  &gt; 450 </text>
+
+</svg>
